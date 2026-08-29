@@ -1,0 +1,13 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Databricks checkouts
+*.dbc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local env
+.env

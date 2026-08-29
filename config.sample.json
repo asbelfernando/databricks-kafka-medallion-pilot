@@ -1,0 +1,8 @@
+{
+  "kafka_bootstrap_servers": "<BOOTSTRAP_SERVERS>",
+  "kafka_topic": "<TOPIC_NAME>",
+  "bronze_path": "dbfs:/delta/bronze/events",
+  "silver_path": "dbfs:/delta/silver/events",
+  "gold_path": "dbfs:/delta/gold/aggregates",
+  "checkpoints_base": "dbfs:/delta/_checkpoints"
+}
