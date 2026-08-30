@@ -48,3 +48,16 @@ git push -u origin main
 
 ---
 Feedback y mejoras bienvenidas.
+ 
+## Diagrama de Arquitectura
+
+Se agregó el diagrama de flujo de datos y componentes en `diagrams/architecture.md`.
+
+Visualiza el diagrama (GitHub renderiza Mermaid en Markdown):
+
+![Arquitectura y flujo de datos](diagrams/architecture.svg)
+
+También disponible como Mermaid source:
+
+- [diagrams/architecture.md](diagrams/architecture.md)
+- [diagrams/architecture.mmd](diagrams/architecture.mmd)
