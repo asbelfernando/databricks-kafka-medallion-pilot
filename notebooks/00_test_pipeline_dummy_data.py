@@ -1,4 +1,8 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "2"
+# ///
 # Notebook: 00_test_pipeline_dummy_data
 # Objetivo: probar el flujo medallion completo (bronze -> silver -> gold -> reporte)
 # con datos dummy generados localmente, sin necesidad de una conexión real a Kafka.
@@ -13,10 +17,10 @@ try:
     report_path = dbutils.widgets.get("report_path")
     num_events = int(dbutils.widgets.get("num_events"))
 except:
-    bronze_path = "dbfs:/tmp/kafka_medallion_test/delta/bronze/events"
-    silver_path = "dbfs:/tmp/kafka_medallion_test/delta/silver/events"
-    gold_path = "dbfs:/tmp/kafka_medallion_test/delta/gold/aggregates"
-    report_path = "dbfs:/tmp/kafka_medallion_test/reports/events_report.html"
+    bronze_path = "main.default.kafka_test_bronze_events"
+    silver_path = "main.default.kafka_test_silver_events"
+    gold_path = "main.default.kafka_test_gold_aggregates"
+    report_path = "/Volumes/main/default/default/kafka_medallion_test_events_report.html"
     num_events = 100
 
 import json
@@ -65,7 +69,7 @@ bronze_schema = StructType([
 
 bronze_df = spark.createDataFrame(dummy_rows, schema=bronze_schema)
 
-(bronze_df.write.format("delta").mode("overwrite").save(bronze_path))
+(bronze_df.write.format("delta").mode("overwrite").saveAsTable(bronze_path))
 print(f"Bronze: {bronze_df.count()} eventos escritos en {bronze_path}")
 
 # ---------------------------------------------------------------------------
@@ -80,7 +84,7 @@ payload_schema = StructType([
     StructField("ts", StringType()),
 ])
 
-bronze_batch = spark.read.format("delta").load(bronze_path)
+bronze_batch = spark.table(bronze_path)
 
 parsed = (
     bronze_batch
@@ -98,7 +102,7 @@ parsed = (
 
 clean = parsed.filter(col("event_id").isNotNull())
 
-(clean.write.format("delta").mode("overwrite").save(silver_path))
+(clean.write.format("delta").mode("overwrite").saveAsTable(silver_path))
 print(f"Silver: {clean.count()} eventos limpios escritos en {silver_path} "
       f"(descartados {parsed.count() - clean.count()} sin event_id)")
 
@@ -106,7 +110,7 @@ print(f"Silver: {clean.count()} eventos limpios escritos en {silver_path} "
 # 3) Agregar silver -> gold y generar reporte HTML (misma logica que
 #    03_aggregate_gold_report).
 # ---------------------------------------------------------------------------
-silver = spark.read.format("delta").load(silver_path)
+silver = spark.table(silver_path)
 
 agg = (
     silver
@@ -115,7 +119,7 @@ agg = (
     .orderBy(col("count").desc())
 )
 
-(agg.write.format("delta").mode("overwrite").save(gold_path))
+(agg.write.format("delta").mode("overwrite").saveAsTable(gold_path))
 print(f"Gold: agregados escritos en {gold_path}")
 
 df = agg.toPandas()
