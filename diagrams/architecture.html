@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Diagrama de Arquitectura — Databricks Kafka Medallion Pilot</title>
+  <style>body{font-family:Arial,Helvetica,sans-serif;margin:24px;} h1{font-size:20px;} .diagram{border:1px solid #eee;padding:12px;background:#fff;}</style>
+</head>
+<body>
+  <h1>Diagrama de Arquitectura — Flujo de Datos</h1>
+  <p>Kafka → Ingest (Streaming) → Bronze → Transform → Silver → Agregación → Gold → Reporte/Visualización.</p>
+  <div class="diagram">
+    <img src="architecture.svg" alt="Diagrama de arquitectura" style="max-width:100%;height:auto;" />
+  </div>
+  <h2>Fuentes</h2>
+  <ul>
+    <li><a href="architecture.mmd">architecture.mmd</a> — fuente Mermaid</li>
+    <li><a href="architecture.md">architecture.md</a> — Markdown con mermaid</li>
+  </ul>
+</body>
+</html>
